@@ -1,0 +1,50 @@
+﻿@using FrontierCode.Enums
+@using FrontierCode.Utility
+@model IEnumerable<AccountModel>
+
+        <!-- TODO: Add responsive design, retest on mobile platform -->
+        <article class="grid">
+            <header class="grid">
+                <div class="title-container">
+                    <h1>Coding Test</h1>
+                </div>
+            </header>
+            <main class="content grid" id="home-content">
+                <div class="content-title-container">
+                    <h2>Accounts</h2>
+                </div>
+                <section class="grid" id="account-grid">
+                    @{
+                        AccountStatus[] displayStatuses = new AccountStatus[] { AccountStatus.Active
+                                                                                    , AccountStatus.Overdue
+                                                                                    , AccountStatus.Inactive };
+
+                        @foreach (var currentStatus in displayStatuses)
+                        {
+                            string classStatus = currentStatus.ToString().ToLowerInvariant();
+
+                            <section class="account-column grid" id="@classStatus-account-column">
+                                <div class="account-container-title" id="@classStatus-account-container-title">
+                                    <h3>@currentStatus</h3>
+                                </div>
+                                @foreach (var account in Model.Where(m => m.AccountStatus.Equals(currentStatus)))
+                                {
+                                    <div class="account-container @classStatus-account">
+                                        <ul class="account-data-list">
+                                            <li><label>Name:</label>@($"{account.LastName}, {account.FirstName}")</li>
+                                            <li><label>Email:</label>@(account.Email)</li>
+                                            <li><label>Phone Number:</label>@(account.PhoneNumber.FormatAsPhoneNumber())</li>
+                                            <li><label>Amount Due:</label>@($"{account.AmountDue:$##0.00} USD")</li>
+                                            @if (account.PaymentDueDate.HasValue)
+                                            {
+                                                <li><label>Due Date:</label>@($"{account.PaymentDueDate:MM/dd/yyyy}")</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                }
+                            </section>
+                        }
+                    }
+                </section>
+            </main>
+        </article>
